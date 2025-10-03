@@ -1,0 +1,9 @@
+# Run linting first
+echo "🔍 Running linter..."
+npm run lint
+
+# Run tests
+echo "🧪 Running tests..."
+npm run test:quick
+
+echo "✅ Pre-commit checks passed!"
