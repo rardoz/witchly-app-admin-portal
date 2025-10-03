@@ -1,0 +1,6 @@
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "biome.enabled": true,
+  "typescript.tsdk": "node_modules/typescript/lib" // ensures VS Code uses your project's TS
+}
