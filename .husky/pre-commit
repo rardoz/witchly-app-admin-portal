@@ -1,5 +1,9 @@
-# Run lint-staged to format, lint, and test only staged files
-echo "🔧 Running lint-staged..."
+# Run linting first
+echo "🔍 Running linter..."
 npx lint-staged
+
+# Run tests
+echo "🧪 Running tests..."
+npm run test:quick
 
 echo "✅ Pre-commit checks passed!"
