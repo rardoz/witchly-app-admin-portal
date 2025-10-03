@@ -11,7 +11,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:quick": "jest --passWithNoTests --silent",
+    "test:quick": "jest --silent",
     "prepare": "husky"
   },
   "dependencies": {
