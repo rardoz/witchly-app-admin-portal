@@ -125,7 +125,6 @@ git commit -m "feat: add new component"
 ├── components/              # Shared components
 │   └── ui/                  # Reusable UI components
 ├── lib/                     # Utilities and configurations
-│   └── env.ts              # Type-safe environment variables
 ├── .github/
 │   ├── workflows/ci.yml     # GitHub Actions CI
 │   └── copilot-instructions.md # AI coding guidelines
@@ -187,7 +186,6 @@ See `.env.example` for all available variables. Key patterns:
 
 - **Server-only**: `DATABASE_URL`, `API_SECRET_KEY`
 - **Client-accessible**: `NEXT_PUBLIC_APP_NAME` (browser-safe)
-- **Type-safe**: Use `lib/env.ts` for configuration
 
 ## 🚀 Deployment
 
