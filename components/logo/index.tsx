@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import Link from "../link";
 
 const Logo: React.FC<{ className?: string }> = ({ className }) => {
   return (
@@ -8,7 +9,7 @@ const Logo: React.FC<{ className?: string }> = ({ className }) => {
         className,
       )}
     >
-      Witchly
+      <Link href="/">Witchly</Link>
     </div>
   );
 };

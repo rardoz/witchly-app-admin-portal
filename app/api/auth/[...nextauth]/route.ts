@@ -29,7 +29,7 @@ async function refreshToken(token: string) {
   };
 }
 
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   pages: { signIn: "/login", error: "/login" },
   session: {
     strategy: "jwt",

@@ -34,6 +34,25 @@ const config: Config = {
     "!**/*.test.{js,jsx,ts,tsx}",
     "!**/*.spec.{js,jsx,ts,tsx}",
   ],
+  transform: {
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+            tsx: true,
+          },
+          transform: {
+            react: {
+              runtime: "automatic",
+            },
+          },
+        },
+      },
+    ],
+  },
+  transformIgnorePatterns: ["/node_modules/(?!(next|@next)/)"],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

@@ -19,7 +19,16 @@ jest.mock("next/navigation", () => ({
     forward: jest.fn(),
     refresh: jest.fn(),
     prefetch: jest.fn(),
+    pathname: "/",
+    query: {},
+    asPath: "/",
   }),
-  useSearchParams: () => new URLSearchParams(),
-  usePathname: () => "/",
+  usePathname: jest.fn(() => "/"),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+  redirect: jest.fn(),
+}));
+
+// Mock next-auth
+jest.mock("@/lib/auth/auth", () => ({
+  auth: jest.fn(),
 }));
