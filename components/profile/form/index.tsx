@@ -2,6 +2,8 @@
 
 import { useActionState, useEffect, useState } from "react";
 import updateUserAction, { type UpdateUserState } from "@/actions/user/update";
+import FormAvatar from "@/components/form/form-avatar";
+import FormBackdrop from "@/components/form/form-backdrop";
 import FormButton from "@/components/form/form-button";
 import FormInput from "@/components/form/form-input";
 import FormLabel from "@/components/form/form-label";
@@ -33,6 +35,8 @@ const ProfileForm = ({ userData }: { userData: User }) => {
     snapchatHandle: userData.snapchatHandle || "",
     profileAsset: userData.profileAsset?.id || "",
     backdropAsset: userData.backdropAsset?.id || "",
+    backdropAssetPublicUrl: userData.backdropAsset?.publicUrl || "",
+    profileAssetPublicUrl: userData.profileAsset?.publicUrl || "",
   }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +64,35 @@ const ProfileForm = ({ userData }: { userData: User }) => {
           <p className="text-sm font-medium">{state.message}</p>
         </div>
       )}
+      <FormBackdrop
+        asset={{
+          ...userData.backdropAsset,
+          id: userData.backdropAsset?.id || "",
+          publicUrl: formValues.backdropAssetPublicUrl,
+        }}
+        onUpdateAsset={(assetId, backdropAssetPublicUrl) => {
+          setFormValues((prev) => ({
+            ...prev,
+            backdropAsset: assetId,
+            backdropAssetPublicUrl,
+          }));
+        }}
+      />
+      <FormAvatar
+        className="my-4 -mt-32 ml-4"
+        asset={{
+          ...userData?.profileAsset,
+          publicUrl: formValues.profileAssetPublicUrl,
+          id: formValues.profileAsset || "",
+        }}
+        onUpdateAsset={(assetId, publicUrl) => {
+          setFormValues((prev) => ({
+            ...prev,
+            profileAsset: assetId,
+            profileAssetPublicUrl: publicUrl,
+          }));
+        }}
+      />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <FormLabel htmlFor="name">Name</FormLabel>
@@ -103,7 +136,7 @@ const ProfileForm = ({ userData }: { userData: User }) => {
           <FormLabel htmlFor="birthDate">Birth Day</FormLabel>
           <FormInput
             name="birthDate"
-            type="text"
+            type="date"
             defaultValue={formValues.birthDate || ""}
             onChange={handleChange}
           />
@@ -216,28 +249,19 @@ const ProfileForm = ({ userData }: { userData: User }) => {
             onChange={handleChange}
           />
         </div>
-        <div>
-          <FormLabel htmlFor="profileAsset">Profile Asset</FormLabel>
-          <FormInput
-            name="profileAsset"
-            type="text"
-            defaultValue={formValues.profileAsset || ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <FormLabel htmlFor="backdropAsset">Backdrop Asset</FormLabel>
-          <FormInput
-            name="backdropAsset"
-            type="text"
-            defaultValue={formValues.backdropAsset || ""}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <FormLabel htmlFor="id">ID</FormLabel>
-          <FormInput name="id" type="text" defaultValue={userData.id || ""} />
-        </div>
+        <FormInput
+          name="profileAsset"
+          type="hidden"
+          defaultValue={formValues.profileAsset || ""}
+          onChange={handleChange}
+        />
+        <FormInput
+          name="backdropAsset"
+          type="hidden"
+          defaultValue={formValues.backdropAsset || ""}
+          onChange={handleChange}
+        />
+        <FormInput name="id" type="hidden" defaultValue={userData.id || ""} />
       </div>
       <div>
         <FormButton className="mt-6">Save Changes</FormButton>

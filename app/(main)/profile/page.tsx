@@ -1,5 +1,6 @@
 import { FaPenToSquare } from "react-icons/fa6";
 import readUserAction from "@/actions/user/read";
+import FormAvatar from "@/components/form/form-avatar";
 import PageTitle from "@/components/page-title";
 import ProfileForm from "@/components/profile/form";
 import { auth } from "@/lib/auth/auth";
@@ -14,6 +15,7 @@ export default async function Profile() {
         <FaPenToSquare />
         Edit Profile
       </PageTitle>
+
       <div className="mt-6">
         {hasErrors && <p>Failed to load user profile</p>}
         {!hasErrors && <ProfileForm userData={readUser.data.user} />}

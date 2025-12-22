@@ -41,10 +41,10 @@ export default async (
               allowedScopes
               emailVerified
               updatedAt
-              profileAsset { id, s3Key }
+              profileAsset { id, publicUrl }
               bio
               shortBio
-              backdropAsset { id, s3Key }
+              backdropAsset { id, publicUrl }
               instagramHandle
               tikTokHandle
               twitterHandle

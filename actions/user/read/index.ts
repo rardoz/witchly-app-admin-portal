@@ -30,10 +30,10 @@ export default async (input: GetUserInput): Promise<GetUserResponse> => {
                 lastLoginAt
                 createdAt
                 updatedAt
-                profileAsset { id, s3Key }
+                profileAsset { id, publicUrl }
                 bio
                 shortBio
-                backdropAsset { id, s3Key }
+                backdropAsset { id, publicUrl }
                 instagramHandle
                 tikTokHandle
                 twitterHandle

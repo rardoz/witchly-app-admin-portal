@@ -7,7 +7,7 @@ import FormButton from "@/components/form/form-button";
 import FormCheckbox from "@/components/form/form-checkbox";
 import FormInput from "@/components/form/form-input";
 import FormLabel from "@/components/form/form-label";
-
+//TODO WE NEED TO REDO THE LOGIN FORM SO IT HANDLES ERRORS PROPERLY
 export default function LoginForm() {
   const [verificationSent, setVerificationSent] = useState(false);
   const router = useRouter();
