@@ -1,6 +1,5 @@
 import { FaPenToSquare } from "react-icons/fa6";
 import readUserAction from "@/actions/user/read";
-import FormAvatar from "@/components/form/form-avatar";
 import PageTitle from "@/components/page-title";
 import ProfileForm from "@/components/profile/form";
 import { auth } from "@/lib/auth/auth";

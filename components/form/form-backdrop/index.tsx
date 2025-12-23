@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useState } from "react";
 import type { Asset } from "@/types/asset";
 import FormAssetModal from "../form-asset-modal";
-import FormButton from "../form-button";
 
 const FormBackdrop: React.FC<{
   asset?: Asset | null;
