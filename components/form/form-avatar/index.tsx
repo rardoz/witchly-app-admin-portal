@@ -8,8 +8,9 @@ import FormAssetModal from "../form-asset-modal";
 const FormAvatar: React.FC<{
   asset?: Asset | null;
   className?: string;
+  primaryColor?: string;
   onUpdateAsset: (assetId: string, publicUrl: string) => void;
-}> = ({ asset, className, onUpdateAsset }) => {
+}> = ({ asset, className, onUpdateAsset, primaryColor }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className={className}>
@@ -21,7 +22,10 @@ const FormAvatar: React.FC<{
           setOpen(true);
         }}
       >
-        <div className="w-28 h-28 mr-2 bg-purple-900 relative rounded-full overflow-hidden border-2 border-white shadow z-1">
+        <div
+          className="w-28 h-28 mr-2 bg-purple-900 relative rounded-full overflow-hidden border-2 border-white shadow z-1"
+          style={primaryColor ? { borderColor: primaryColor } : {}}
+        >
           <small className="absolute top-1/3 left-0 z-0">
             Click to upload avatar
           </small>

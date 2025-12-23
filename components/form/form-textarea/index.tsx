@@ -1,11 +1,10 @@
 import classNames from "classnames";
 
-const FormInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
-  className,
-  ...props
-}) => {
+const FormTextarea: React.FC<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>
+> = ({ className, ...props }) => {
   return (
-    <input
+    <textarea
       {...props}
       id={props.id || props.name || undefined}
       className={classNames(
@@ -16,4 +15,4 @@ const FormInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
   );
 };
 
-export default FormInput;
+export default FormTextarea;
