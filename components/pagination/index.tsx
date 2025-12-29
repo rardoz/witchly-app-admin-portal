@@ -62,7 +62,7 @@ const Pagination: React.FC<{
 
   return (
     total > 0 && (
-      <div className="flex justify-center items-center gap-2 my-6">
+      <div className="flex justify-center items-center gap-2">
         {/* Previous Button */}
         <Link
           href={buildUrl(Math.max(0, offset - limit))}

@@ -12,7 +12,7 @@ const UsersComponent = ({
   const hasErrors = userResponse.errors || !userResponse.data?.users;
   const noUsersFound = !hasErrors && users?.totalCount === 0;
   return (
-    <div className="my-6">
+    <div className="mt-6 mb-8 pb-8 border-b border-foreground/10">
       {hasErrors && <p>Failed to load user users</p>}
       {noUsersFound && <p>No users found</p>}
       <div className="grid grid-cols-2 gap-4">
