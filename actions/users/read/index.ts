@@ -12,17 +12,15 @@ export const popUserReadCache = async (userId: string) => {
 
 export default async (input: GetUsersInput): Promise<GetUsersResponse> => {
   // Call API to send login code
-  const cacheKey = getCacheKey(
-    JSON.stringify({ limit: input.limit, offset: input.offset }),
-  );
+  const cacheKey = getCacheKey(JSON.stringify(input));
   const session = await auth();
   const cachedFetch = unstable_cache(
     async () => {
       const response = await gqlRequestWithAuth(
         session,
         `
-        query GetUsers($limit: Float, $offset: Float){
-          users(limit: $limit, offset: $offset) {
+        query GetUsers($limit: Float, $offset: Float, $email: String, $name: String, $handle: String){
+          users(limit: $limit, offset: $offset, email: $email, name: $name, handle: $handle) {
             records {
                 id
                 name

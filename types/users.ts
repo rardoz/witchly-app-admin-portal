@@ -22,6 +22,7 @@ export type GetUsersResponse = GetUsersSuccessResponse | GetUsersErrorResponse;
 export interface GetUsersInput {
   handle?: string;
   email?: string;
+  name?: string;
   limit?: number;
   offset?: number;
 }

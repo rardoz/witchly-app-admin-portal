@@ -10,10 +10,11 @@ const UsersComponent = ({
 }) => {
   const users = userResponse.data?.users;
   const hasErrors = userResponse.errors || !userResponse.data?.users;
-
+  const noUsersFound = !hasErrors && users?.totalCount === 0;
   return (
     <div className="my-6">
       {hasErrors && <p>Failed to load user users</p>}
+      {noUsersFound && <p>No users found</p>}
       <div className="grid grid-cols-2 gap-4">
         {users?.records?.map((user) => (
           <div key={user.id} className="mt-6 ">

@@ -1,5 +1,8 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: Using array index as key for pagination items is acceptable in this context */
+"use client";
+
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Pagination: React.FC<{
@@ -9,6 +12,14 @@ const Pagination: React.FC<{
 }> = ({ limit, offset, total }) => {
   const currentPage = Math.floor(offset / limit) + 1;
   const totalPages = Math.ceil(total / limit);
+  const searchParams = useSearchParams();
+
+  const buildUrl = (newOffset: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("limit", limit.toString());
+    params.set("offset", newOffset.toString());
+    return `?${params.toString()}`;
+  };
 
   // Generate array of page numbers to display
   const getPageNumbers = () => {
@@ -50,62 +61,67 @@ const Pagination: React.FC<{
   const pages = getPageNumbers();
 
   return (
-    <div className="flex justify-center items-center gap-2 my-6">
-      {/* Previous Button */}
-      <Link
-        href={`?limit=${limit}&offset=${Math.max(0, offset - limit)}`}
-        className={`p-2 rounded-md transition-colors ${
-          currentPage === 1
-            ? "text-gray-600 pointer-events-none"
-            : "text-white hover:bg-gray-800"
-        }`}
-        aria-disabled={currentPage === 1}
-      >
-        <FaChevronLeft />
-      </Link>
+    total > 0 && (
+      <div className="flex justify-center items-center gap-2 my-6">
+        {/* Previous Button */}
+        <Link
+          href={buildUrl(Math.max(0, offset - limit))}
+          className={`p-2 rounded-md transition-colors ${
+            currentPage === 1
+              ? "text-gray-600 pointer-events-none"
+              : "text-white hover:bg-gray-800"
+          }`}
+          aria-disabled={currentPage === 1}
+        >
+          <FaChevronLeft />
+        </Link>
 
-      {/* Page Numbers */}
-      {pages.map((page, index) => {
-        if (page === "...") {
+        {/* Page Numbers */}
+        {pages.map((page, index) => {
+          if (page === "...") {
+            return (
+              <span
+                key={`ellipsis-${index}`}
+                className="px-3 py-2 text-gray-500"
+              >
+                ...
+              </span>
+            );
+          }
+
+          const pageNumber = page as number;
+          const pageOffset = (pageNumber - 1) * limit;
+          const isActive = pageNumber === currentPage;
+
           return (
-            <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
-              ...
-            </span>
+            <Link
+              key={pageNumber}
+              href={buildUrl(pageOffset)}
+              className={`px-3 py-2 rounded-md transition-colors ${
+                isActive
+                  ? "bg-indigo-600 text-white font-semibold"
+                  : "text-gray-300 hover:bg-gray-800"
+              }`}
+            >
+              {pageNumber}
+            </Link>
           );
-        }
+        })}
 
-        const pageNumber = page as number;
-        const pageOffset = (pageNumber - 1) * limit;
-        const isActive = pageNumber === currentPage;
-
-        return (
-          <Link
-            key={pageNumber}
-            href={`?limit=${limit}&offset=${pageOffset}`}
-            className={`px-3 py-2 rounded-md transition-colors ${
-              isActive
-                ? "bg-indigo-600 text-white font-semibold"
-                : "text-gray-300 hover:bg-gray-800"
-            }`}
-          >
-            {pageNumber}
-          </Link>
-        );
-      })}
-
-      {/* Next Button */}
-      <Link
-        href={`?limit=${limit}&offset=${offset + limit}`}
-        className={`p-2 rounded-md transition-colors ${
-          currentPage === totalPages
-            ? "text-gray-600 pointer-events-none"
-            : "text-white hover:bg-gray-800"
-        }`}
-        aria-disabled={currentPage === totalPages}
-      >
-        <FaChevronRight />
-      </Link>
-    </div>
+        {/* Next Button */}
+        <Link
+          href={buildUrl(offset + limit)}
+          className={`p-2 rounded-md transition-colors ${
+            currentPage === totalPages
+              ? "text-gray-600 pointer-events-none"
+              : "text-white hover:bg-gray-800"
+          }`}
+          aria-disabled={currentPage === totalPages}
+        >
+          <FaChevronRight />
+        </Link>
+      </div>
+    )
   );
 };
 
