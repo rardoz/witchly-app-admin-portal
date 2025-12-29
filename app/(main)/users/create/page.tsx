@@ -1,5 +1,5 @@
 import ProfileForm from "@/components/profile/form";
-import UsersNav from "@/components/users/components/all-users-nav";
+import UsersNav from "@/components/users/components/users-nav";
 import { auth } from "@/lib/auth/auth";
 
 export default async function UsersCreate() {

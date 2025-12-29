@@ -1,8 +1,8 @@
 import readUsersAction from "@/actions/users/read";
 import Pagination from "@/components/pagination";
 import UsersComponent from "@/components/users";
-import UsersNav from "@/components/users/components/all-users-nav";
 import UsersFilters from "@/components/users/components/filters";
+import UsersNav from "@/components/users/components/users-nav";
 import { auth } from "@/lib/auth/auth";
 
 interface UsersSearchParams {

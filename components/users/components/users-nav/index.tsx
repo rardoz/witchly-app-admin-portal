@@ -1,6 +1,7 @@
-import { FaPlus, FaUsers } from "react-icons/fa6";
-import LinkButton from "@/components/link-button";
-import PageTitle from "@/components/page-title";
+import { FaPlus, FaTrash, FaUsers } from "react-icons/fa6";
+import FormButton from "@/components/form/form-button";
+import Navbar from "@/components/navbar";
+import DeleteUserForm from "@/components/profile/form/delete";
 
 const TYPE_TO_COMPONENTS = {
   "users-all": {
@@ -50,16 +51,16 @@ const TYPE_TO_COMPONENTS = {
   },
 };
 
-const UsersNav: React.FC<{
-  type?: "users-all" | "users-create" | "users-edit";
-}> = ({ type = "users-all" }) => {
+const UsersNav: React.FC<
+  React.PropsWithChildren<{
+    type?: "users-all" | "users-create" | "users-edit";
+    id?: string;
+  }>
+> = ({ type = "users-all", children }) => {
   return (
-    <nav className="flex items-center justify-between border-b border-foreground/10">
-      <PageTitle>{TYPE_TO_COMPONENTS[type].title}</PageTitle>
-      <LinkButton href={TYPE_TO_COMPONENTS[type].href.url} className="-mt-5">
-        {TYPE_TO_COMPONENTS[type].href.label}
-      </LinkButton>
-    </nav>
+    <Navbar type={type} componentMap={TYPE_TO_COMPONENTS}>
+      {children}
+    </Navbar>
   );
 };
 

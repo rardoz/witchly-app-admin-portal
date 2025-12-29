@@ -1,4 +1,4 @@
-import Nav from "@/components/nav";
+import Sidebar from "@/components/sidebar";
 
 export default function MainLayout({
   children,
@@ -7,7 +7,7 @@ export default function MainLayout({
 }>) {
   return (
     <div className="flex min-h-screen">
-      <Nav />
+      <Sidebar />
       <main className="flex-1 overflow-x-hidden overflow-y-auto">
         <div className="container mx-auto p-6">{children}</div>
       </main>

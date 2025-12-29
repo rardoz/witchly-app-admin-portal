@@ -1,6 +1,5 @@
 "use client";
 
-import { access } from "fs";
 import { useRouter } from "next/navigation";
 import {
   useActionState,
@@ -9,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { FaRegSave } from "react-icons/fa";
 import createUserAction, { type CreateUserState } from "@/actions/user/create";
 import updateUserAction, { type UpdateUserState } from "@/actions/user/update";
 import FormAvatar from "@/components/form/form-avatar";
@@ -58,12 +58,12 @@ const ProfileForm = ({ userData }: { userData?: User }) => {
     null,
   );
 
-  const navigator = useRouter();
-
   const [createState, createFormAction] = useActionState<
     CreateUserState | null,
     FormData
   >(createUserAction, null);
+
+  const navigator = useRouter();
 
   const [formValues, setFormValues] = useState(() =>
     mapUserDataToState(userData),
@@ -390,8 +390,11 @@ const ProfileForm = ({ userData }: { userData?: User }) => {
           <FormInput name="id" type="hidden" value={userData?.id || ""} />
         )}
       </div>
-      <div>
-        <FormButton className="mt-6">Save Changes</FormButton>
+      <div className="flex items-center gap-4 mt-6">
+        <FormButton>
+          <FaRegSave />
+          Save Changes
+        </FormButton>
       </div>
     </form>
   );
