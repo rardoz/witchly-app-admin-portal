@@ -1,12 +1,11 @@
 import classNames from "classnames";
+import Link, { type LinkProps } from "next/link";
 
-const FormButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
-  className,
-  ...props
-}) => {
+const LinkButton: React.FC<
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps
+> = ({ className, ...props }) => {
   return (
-    <button
-      type="submit"
+    <Link
       {...props}
       className={classNames(
         "flex items-center justify-center gap-2 btn rounded-md bg-purple-700 hover:bg-fuchsia-700 disabled:hover:bg-purple-500 cursor-pointer p-2",
@@ -16,4 +15,4 @@ const FormButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   );
 };
 
-export default FormButton;
+export default LinkButton;

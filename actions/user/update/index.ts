@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import gqlRequest from "@/lib/gql";
 import { popUserReadCache } from "../read";
 
@@ -26,7 +27,8 @@ export default async (
     // Filter out 'id' and Next.js action metadata keys
     const input = Object.fromEntries(
       Array.from(formData.entries()).filter(
-        ([key]) => key !== "id" && !key.startsWith("$ACTION_"),
+        ([key, value]) =>
+          key !== "id" && !key.startsWith("$ACTION_") && value !== "",
       ),
     );
 
@@ -71,7 +73,7 @@ export default async (
       };
     }
 
-    //revalidatePath("");
+    revalidatePath("/users");
     await popUserReadCache(id);
 
     return {
