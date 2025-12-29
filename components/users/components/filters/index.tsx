@@ -1,6 +1,7 @@
 import FormFilters from "@/components/form/form-filters";
 import FormInput from "@/components/form/form-input";
 import FormLabel from "@/components/form/form-label";
+import FormSelect from "@/components/form/form-select";
 
 const UsersFilters = () => {
   return (
@@ -16,6 +17,15 @@ const UsersFilters = () => {
       <div>
         <FormLabel htmlFor="handle">Handle</FormLabel>
         <FormInput type="text" id="handle" name="handle" />
+      </div>
+      <div>
+        <FormLabel htmlFor="access">Access</FormLabel>
+        <FormSelect id="access" name="access">
+          <option value="">Select Access</option>
+          <option value="admin">Admin</option>
+          <option value="basic">Basic</option>
+          <option value="denied">Denied</option>
+        </FormSelect>
       </div>
     </FormFilters>
   );

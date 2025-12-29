@@ -1,14 +1,11 @@
 "use server";
 
-import { revalidateTag, unstable_cache } from "next/cache";
+import { unstable_cache } from "next/cache";
 import { auth } from "@/lib/auth/auth";
 import { gqlRequestWithAuth } from "@/lib/gql";
 import type { GetUsersInput, GetUsersResponse } from "@/types/users";
 
-const getCacheKey = (userId: string) => `user-${userId}`;
-export const popUserReadCache = async (userId: string) => {
-  revalidateTag(getCacheKey(userId));
-};
+const getCacheKey = (params: string) => `user-${params}`;
 
 export default async (input: GetUsersInput): Promise<GetUsersResponse> => {
   // Call API to send login code
@@ -19,8 +16,8 @@ export default async (input: GetUsersInput): Promise<GetUsersResponse> => {
       const response = await gqlRequestWithAuth(
         session,
         `
-        query GetUsers($limit: Float, $offset: Float, $email: String, $name: String, $handle: String){
-          users(limit: $limit, offset: $offset, email: $email, name: $name, handle: $handle) {
+        query GetUsers($limit: Float, $offset: Float, $email: String, $name: String, $handle: String, $access: String){
+          users(limit: $limit, offset: $offset, email: $email, name: $name, handle: $handle, access: $access) {
             records {
                 id
                 name

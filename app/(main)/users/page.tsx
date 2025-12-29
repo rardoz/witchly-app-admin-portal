@@ -9,6 +9,7 @@ interface UsersSearchParams {
   email?: string;
   name?: string;
   handle?: string;
+  access?: "admin" | "basic" | "denied";
 }
 
 interface PaginationParams {
@@ -31,6 +32,8 @@ export default async function Users({
   if (awaitedSearchParams.name) filters.name = awaitedSearchParams.name;
 
   if (awaitedSearchParams.handle) filters.handle = awaitedSearchParams.handle;
+
+  if (awaitedSearchParams.access) filters.access = awaitedSearchParams.access;
 
   const readUser = await readUsersAction({ limit, offset, ...filters }).catch(
     (error) => {
