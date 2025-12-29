@@ -16,11 +16,22 @@ export default async (
 ): Promise<CreateUserState> => {
   try {
     // Filter out "" and Next.js action metadata keys
-    const input = Object.fromEntries(
+    const input: Record<string, unknown> = Object.fromEntries(
       Array.from(formData.entries()).filter(
         ([key, value]) => !key.startsWith("$ACTION_") && value !== "",
       ),
     );
+
+    if (input.access) {
+      if (input.access === "admin") {
+        input.allowedScopes = ["read", "write", "admin"];
+      } else if (input.access === "basic") {
+        input.allowedScopes = ["read", "write", "basic"];
+      } else if (input.access === "denied") {
+        input.allowedScopes = ["read"];
+      }
+      delete input.access;
+    }
     //seed data
     // for (let i = 0; i < 50; i++) {
     //   await gqlRequest(
