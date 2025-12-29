@@ -1,5 +1,6 @@
 "use client";
 
+import { access } from "fs";
 import { useRouter } from "next/navigation";
 import {
   useActionState,
@@ -42,6 +43,13 @@ const mapUserDataToState = (userData?: User) => ({
   backdropAsset: userData?.backdropAsset?.id || "",
   backdropAssetPublicUrl: userData?.backdropAsset?.publicUrl || "",
   profileAssetPublicUrl: userData?.profileAsset?.publicUrl || "",
+  access: userData?.allowedScopes?.includes("admin")
+    ? "admin"
+    : userData?.allowedScopes?.includes("basic")
+      ? "basic"
+      : userData?.allowedScopes
+        ? "denied"
+        : "",
 });
 
 const ProfileForm = ({ userData }: { userData?: User }) => {
@@ -352,6 +360,19 @@ const ProfileForm = ({ userData }: { userData?: User }) => {
             value={formValues.snapchatHandle || ""}
             onChange={handleChange}
           />
+        </div>
+        <div>
+          <FormLabel htmlFor="access">Access</FormLabel>
+          <FormSelect
+            name="access"
+            onChange={handleChange}
+            value={formValues.access || ""}
+          >
+            <option value="">Select Access</option>
+            <option value="admin">Admin</option>
+            <option value="basic">Basic</option>
+            <option value="denied">Denied</option>
+          </FormSelect>
         </div>
         <FormInput
           name="profileAsset"
