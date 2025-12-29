@@ -31,9 +31,14 @@ const FormAvatar: React.FC<{
           </small>
           {asset?.publicUrl && (
             <Image
-              src={asset?.publicUrl || ""}
+              src={
+                asset?.publicUrl?.includes(".gif")
+                  ? asset?.publicUrl
+                  : `${asset?.publicUrl}?w=200&h=200&q=100` || ""
+              }
               alt="click to upload avatar"
               fill
+              unoptimized
               className="absolute inset-0 h-full w-full object-cover z-1"
             />
           )}

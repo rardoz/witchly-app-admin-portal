@@ -33,9 +33,15 @@ const UsersComponent = ({
                 </small>
                 {user.profileAsset?.publicUrl && (
                   <Image
-                    src={user.profileAsset.publicUrl || ""}
+                    src={
+                      user.profileAsset?.publicUrl?.includes(".gif")
+                        ? user.profileAsset?.publicUrl
+                        : `${user.profileAsset?.publicUrl}?w=200&h=200&q=100` ||
+                          ""
+                    }
                     alt="click to upload avatar"
                     fill
+                    unoptimized
                     className="absolute inset-0 h-full w-full object-cover z-1"
                   />
                 )}

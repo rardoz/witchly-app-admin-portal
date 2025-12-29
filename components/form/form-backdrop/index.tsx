@@ -26,9 +26,14 @@ const FormBackdrop: React.FC<{
         </small>
         {asset?.publicUrl && (
           <Image
-            src={asset?.publicUrl || ""}
+            src={
+              `${asset?.publicUrl}`.includes(".gif")
+                ? `${asset?.publicUrl}`
+                : `${asset?.publicUrl}?w=2200&h=400&q=100` || ""
+            }
             alt="file asset preview"
             fill
+            unoptimized
             className={classNames(
               "absolute inset-0 z-1 h-full w-full object-cover",
             )}
