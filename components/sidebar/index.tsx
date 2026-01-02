@@ -12,7 +12,7 @@ const routes = [
   },
 ];
 
-const Nav: React.FC = async () => {
+const Sidebar: React.FC = async () => {
   const session = await auth();
   const readUser = await readUserAction({ id: session?.user.id || "" });
 
@@ -43,4 +43,4 @@ const Nav: React.FC = async () => {
   );
 };
 
-export default Nav;
+export default Sidebar;

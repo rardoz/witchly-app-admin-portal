@@ -8,7 +8,7 @@ const PageTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
     <h1
       {...props}
       className={classNames(
-        "text-2xl font-bold mb-4 flex items-baseline gap-2",
+        "text-2xl font-bold mb-4 flex items-center gap-2",
         className,
       )}
     />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   useActionState,
   useCallback,
@@ -7,6 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
+import { FaRegSave } from "react-icons/fa";
+import createUserAction, { type CreateUserState } from "@/actions/user/create";
 import updateUserAction, { type UpdateUserState } from "@/actions/user/update";
 import FormAvatar from "@/components/form/form-avatar";
 import FormBackdrop from "@/components/form/form-backdrop";
@@ -18,35 +21,49 @@ import FormSelect from "@/components/form/form-select";
 import FormTextarea from "@/components/form/form-textarea";
 import type { User } from "@/types/user";
 
-const mapUserDataToState = (userData: User) => ({
-  name: userData.name || "",
-  handle: userData.handle || "",
-  email: userData.email || "",
-  location: userData.location || "",
-  birthDate: userData.birthDate || "",
-  sign: userData.sign || "",
-  sex: userData.sex || "",
-  pronouns: userData.pronouns || "",
-  bio: userData.bio || "",
-  shortBio: userData.shortBio || "",
-  primaryColor: userData.primaryColor || "",
-  instagramHandle: userData.instagramHandle || "",
-  tikTokHandle: userData.tikTokHandle || "",
-  twitterHandle: userData.twitterHandle || "",
-  websiteUrl: userData.websiteUrl || "",
-  facebookUrl: userData.facebookUrl || "",
-  snapchatHandle: userData.snapchatHandle || "",
-  profileAsset: userData.profileAsset?.id || "",
-  backdropAsset: userData.backdropAsset?.id || "",
-  backdropAssetPublicUrl: userData.backdropAsset?.publicUrl || "",
-  profileAssetPublicUrl: userData.profileAsset?.publicUrl || "",
+const mapUserDataToState = (userData?: User) => ({
+  name: userData?.name || "",
+  handle: userData?.handle || "",
+  email: userData?.email || "",
+  location: userData?.location || "",
+  birthDate: userData?.birthDate || "",
+  sign: userData?.sign || "",
+  sex: userData?.sex || "",
+  pronouns: userData?.pronouns || "",
+  bio: userData?.bio || "",
+  shortBio: userData?.shortBio || "",
+  primaryColor: userData?.primaryColor || "",
+  instagramHandle: userData?.instagramHandle || "",
+  tikTokHandle: userData?.tikTokHandle || "",
+  twitterHandle: userData?.twitterHandle || "",
+  websiteUrl: userData?.websiteUrl || "",
+  facebookUrl: userData?.facebookUrl || "",
+  snapchatHandle: userData?.snapchatHandle || "",
+  profileAsset: userData?.profileAsset?.id || "",
+  backdropAsset: userData?.backdropAsset?.id || "",
+  backdropAssetPublicUrl: userData?.backdropAsset?.publicUrl || "",
+  profileAssetPublicUrl: userData?.profileAsset?.publicUrl || "",
+  access: userData?.allowedScopes?.includes("admin")
+    ? "admin"
+    : userData?.allowedScopes?.includes("basic")
+      ? "basic"
+      : userData?.allowedScopes
+        ? "denied"
+        : "",
 });
 
-const ProfileForm = ({ userData }: { userData: User }) => {
+const ProfileForm = ({ userData }: { userData?: User }) => {
   const [state, formAction] = useActionState<UpdateUserState | null, FormData>(
     updateUserAction,
     null,
   );
+
+  const [createState, createFormAction] = useActionState<
+    CreateUserState | null,
+    FormData
+  >(createUserAction, null);
+
+  const navigator = useRouter();
 
   const [formValues, setFormValues] = useState(() =>
     mapUserDataToState(userData),
@@ -65,26 +82,30 @@ const ProfileForm = ({ userData }: { userData: User }) => {
   );
 
   useEffect(() => {
-    if (state?.message) {
-      console.log(state.success ? "✅" : "❌", state.message, state);
+    if (state?.message || createState?.message) {
       window.scrollTo({ top: 0, behavior: "instant" });
     }
-  }, [state]);
+  }, [state, createState]);
 
   // Add this new useEffect to sync formValues when userData changes
   useEffect(() => {
-    console.log("Syncing formValues with userData");
     if (state?.message) {
       setFormValues(mapUserDataToState(userData));
     }
   }, [state, userData]);
 
+  useEffect(() => {
+    if (createState?.id) {
+      navigator.push(`/users/${createState.id}`);
+    }
+  }, [createState, navigator]);
+
   const formBackdrop = useMemo(() => {
     return (
       <FormBackdrop
         asset={{
-          ...userData.backdropAsset,
-          id: userData.backdropAsset?.id || "",
+          ...userData?.backdropAsset,
+          id: userData?.backdropAsset?.id || "",
           publicUrl: formValues.backdropAssetPublicUrl,
         }}
         onUpdateAsset={(assetId, backdropAssetPublicUrl) => {
@@ -96,7 +117,7 @@ const ProfileForm = ({ userData }: { userData: User }) => {
         }}
       />
     );
-  }, [userData.backdropAsset, formValues.backdropAssetPublicUrl]);
+  }, [userData?.backdropAsset, formValues.backdropAssetPublicUrl]);
 
   const formAvatar = useMemo(() => {
     return (
@@ -137,18 +158,19 @@ const ProfileForm = ({ userData }: { userData: User }) => {
       />
     );
   }, [formValues.primaryColor]);
-
   return (
-    <form action={formAction}>
-      {state?.message && (
+    <form action={userData ? formAction : createFormAction}>
+      {(state?.message || createState?.message) && (
         <div
           className={`mb-6 rounded-lg border p-4 ${
-            state.success
+            state?.success || createState?.success
               ? "border-green-500/20 bg-green-500/10 text-green-400"
               : "border-red-500/20 bg-red-500/10 text-red-400"
           }`}
         >
-          <p className="text-sm font-medium">{state.message}</p>
+          <p className="text-sm font-medium">
+            {state?.message || createState?.message}
+          </p>
         </div>
       )}
       {formBackdrop}
@@ -251,6 +273,7 @@ const ProfileForm = ({ userData }: { userData: User }) => {
             value={formValues.pronouns || ""}
             onChange={handleChange}
           >
+            <option value="">Choose your pronouns</option>
             <option value="she/her">She / Her</option>
             <option value="he/him">He / Him</option>
             <option value="they/them">They / Them</option>
@@ -338,6 +361,19 @@ const ProfileForm = ({ userData }: { userData: User }) => {
             onChange={handleChange}
           />
         </div>
+        <div>
+          <FormLabel htmlFor="access">Access</FormLabel>
+          <FormSelect
+            name="access"
+            onChange={handleChange}
+            value={formValues.access || ""}
+          >
+            <option value="">Select Access</option>
+            <option value="admin">Admin</option>
+            <option value="basic">Basic</option>
+            <option value="denied">Denied</option>
+          </FormSelect>
+        </div>
         <FormInput
           name="profileAsset"
           type="hidden"
@@ -350,10 +386,15 @@ const ProfileForm = ({ userData }: { userData: User }) => {
           value={formValues.backdropAsset || ""}
           onChange={handleChange}
         />
-        <FormInput name="id" type="hidden" value={userData.id || ""} />
+        {userData && (
+          <FormInput name="id" type="hidden" value={userData?.id || ""} />
+        )}
       </div>
-      <div>
-        <FormButton className="mt-6">Save Changes</FormButton>
+      <div className="flex items-center gap-4 mt-6">
+        <FormButton>
+          <FaRegSave />
+          Save Changes
+        </FormButton>
       </div>
     </form>
   );

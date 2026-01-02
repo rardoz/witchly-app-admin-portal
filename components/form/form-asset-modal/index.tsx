@@ -1,12 +1,14 @@
 import classNames from "classnames";
-import Image from "next/image";
 import {
   startTransition,
   useActionState,
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from "react";
+import ReactCrop, { type Crop, type PixelCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 import createAssetAction, {
   type CreateAssetState,
 } from "@/actions/asset/create";
@@ -21,6 +23,8 @@ interface FormAssetModalProps extends ModalProps {
   id?: string;
   accept?: string;
   name: string;
+  cropWidth?: number;
+  cropHeight?: number;
   onClose: (assetID?: string, publicUrl?: string) => void;
 }
 
@@ -30,22 +34,31 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
   name,
   accept,
   id,
+  cropWidth,
+  cropHeight,
 }) => {
   const [updateAssetState, updateAssetFormAction] = useActionState<
     UpdateAssetState | null,
     FormData
   >(updateAssetAction, null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [initializeChunkedUploadState, initializeChunkedUploadAction] =
     useActionState<CreateAssetState | null, FormData>(createAssetAction, null);
   const [chunkIndex, setChunkIndex] = useState(0);
   const [fileName, setFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [crop, setCrop] = useState<Crop>();
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+  const [croppedImageBlob, setCroppedImageBlob] = useState<Blob | null>(null);
 
   const handleFileChange = (file: File | null) => {
     setFileName(file?.name || null);
     setFilePreview(file ? URL.createObjectURL(file) : null);
+    setCrop(undefined);
+    setCompletedCrop(undefined);
+    setCroppedImageBlob(null);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -64,17 +77,117 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
     setIsDragging(false);
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onImageLoad = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const { width, height } = e.currentTarget;
+
+      if (cropWidth && cropHeight) {
+        // Calculate aspect ratio
+        const targetAspect = cropWidth / cropHeight;
+        const imageAspect = width / height;
+
+        let cropW = width;
+        let cropH = height;
+        let x = 0;
+        let y = 0;
+
+        if (imageAspect > targetAspect) {
+          // Image is wider, fit to height
+          cropW = height * targetAspect;
+          x = (width - cropW) / 2;
+        } else {
+          // Image is taller, fit to width
+          cropH = width / targetAspect;
+          y = (height - cropH) / 2;
+        }
+
+        setCrop({
+          unit: "px",
+          x,
+          y,
+          width: cropW,
+          height: cropH,
+        });
+      }
+    },
+    [cropWidth, cropHeight],
+  );
+
+  const generateCroppedImage = useCallback(
+    async (crop: PixelCrop) => {
+      if (!imageRef.current || !crop.width || !crop.height) return;
+
+      const image = imageRef.current;
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) return;
+
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+
+      // Set canvas size to desired output dimensions
+      canvas.width = cropWidth || crop.width;
+      canvas.height = cropHeight || crop.height;
+
+      ctx.drawImage(
+        image,
+        crop.x * scaleX,
+        crop.y * scaleY,
+        crop.width * scaleX,
+        crop.height * scaleY,
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      );
+
+      return new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob);
+          },
+          "image/jpeg",
+          0.95,
+        );
+      });
+    },
+    [cropWidth, cropHeight],
+  );
+
+  useEffect(() => {
+    if (completedCrop) {
+      generateCroppedImage(completedCrop).then((blob) => {
+        if (blob) {
+          setCroppedImageBlob(blob);
+        }
+      });
+    }
+  }, [completedCrop, generateCroppedImage]);
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData();
-    const currentFile = fileInputRef.current?.files?.[0];
-    if (!currentFile) {
+
+    let fileToUpload: File | Blob | null =
+      fileInputRef.current?.files?.[0] || null;
+
+    // If we have a crop, use the cropped image blob
+    if (croppedImageBlob && fileName) {
+      fileToUpload = new File([croppedImageBlob], fileName, {
+        type: "image/jpeg",
+      });
+    }
+
+    if (!fileToUpload) {
       console.error("No file selected");
       return;
     }
-    formData.append("fileName", currentFile.name);
-    formData.append("mimeType", currentFile.type);
-    formData.append("totalSize", currentFile.size.toString());
+
+    const formData = new FormData();
+    formData.append("fileName", fileName || "image.jpg");
+    formData.append("mimeType", fileToUpload.type);
+    formData.append("totalSize", fileToUpload.size.toString());
+
     startTransition(() => {
       initializeChunkedUploadAction(formData);
     });
@@ -87,8 +200,6 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
       updateAssetState?.data?.status === "completed" &&
       open
     ) {
-      // TODO: SEND BACK EVENT OF data.asset.id, publicURL
-      // and also make sure this doesnt fire until the status is completed
       onClose(
         updateAssetState?.data?.assetId,
         updateAssetState?.data?.publicUrl,
@@ -100,40 +211,35 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
     if (
       initializeChunkedUploadState?.success &&
       initializeChunkedUploadState?.data &&
-      fileInputRef.current?.files?.[0]
+      (fileInputRef.current?.files?.[0] || croppedImageBlob)
     ) {
       const chunkSize = initializeChunkedUploadState.data.chunkSize;
       const nextChunkIndex = chunkIndex + 1;
-      const totalChunks = Math.ceil(
-        fileInputRef.current.files[0].size / chunkSize,
-      );
-      if (nextChunkIndex > totalChunks) {
-        // All chunks uploaded
 
+      // Use cropped blob if available, otherwise use original file
+      const fileToUpload = croppedImageBlob || fileInputRef.current?.files?.[0];
+
+      if (!fileToUpload) return;
+
+      const totalChunks = Math.ceil(fileToUpload.size / chunkSize);
+
+      if (nextChunkIndex > totalChunks) {
         return;
       }
-      // Proceed to upload the first chunk
+
       const formData = new FormData();
       formData.append("uploadID", initializeChunkedUploadState.data.uploadId);
       formData.append("chunkIndex", chunkIndex.toString());
 
-      const file = fileInputRef.current.files[0];
-
       const start = chunkIndex * chunkSize;
-      const end = Math.min(start + chunkSize, file.size);
-      const chunk = file.slice(start, end);
-      formData.append("chunk", chunk, file.name);
-      console.log(
-        "chunk check: ",
-        updateAssetState?.data?.chunkIndex,
-        " ",
-        chunkIndex,
-      );
+      const end = Math.min(start + chunkSize, fileToUpload.size);
+      const chunk = fileToUpload.slice(start, end);
+      formData.append("chunk", chunk, fileName || "image.jpg");
+
       if (
         (chunkIndex === 0 && !updateAssetState) ||
         updateAssetState?.data?.chunkIndex === chunkIndex - 1
       ) {
-        console.log("next");
         startTransition(() => {
           updateAssetFormAction(formData);
         });
@@ -146,9 +252,13 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
     chunkIndex,
     updateAssetFormAction,
     updateAssetState,
+    croppedImageBlob,
+    fileName,
   ]);
 
-  console.log("updated state", updateAssetState);
+  const isGif =
+    fileName?.toLowerCase().endsWith(".gif") ||
+    fileInputRef.current?.files?.[0]?.type === "image/gif";
 
   return (
     <Modal open={open} onClose={() => onClose()}>
@@ -182,19 +292,48 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
                   </p>
                 )}
                 {filePreview && (
-                  <Image
-                    src={filePreview}
-                    alt="file asset preview"
-                    width="400"
-                    height="400"
-                    className="w-auto h-full max-h-[60vh] max-w-[60vw]"
-                  />
+                  <div className="max-w-[600px] max-h-[600px] w-full h-full">
+                    {!isGif ? (
+                      <ReactCrop
+                        crop={crop}
+                        onChange={(c) => setCrop(c)}
+                        onComplete={(c) => setCompletedCrop(c)}
+                        aspect={
+                          cropWidth && cropHeight
+                            ? cropWidth / cropHeight
+                            : undefined
+                        }
+                      >
+                        {/** biome-ignore lint/performance/noImgElement: <explanation: we need to ref the image> */}
+                        <img
+                          ref={imageRef}
+                          src={filePreview}
+                          alt="file asset preview"
+                          onLoad={onImageLoad}
+                          className="max-w-full max-h-full w-auto h-auto object-contain"
+                        />
+                      </ReactCrop>
+                    ) : (
+                      // biome-ignore lint/performance/noImgElement: <explanation: we need to ref the image>
+                      <img
+                        ref={imageRef}
+                        src={filePreview}
+                        alt="file asset preview"
+                        className="max-w-full max-h-full w-auto h-auto object-contain"
+                      />
+                    )}
+                  </div>
                 )}
               </div>
             </div>
           </div>
           <div>
             <h2 className="text-xl font-semibold my-4">Create Asset</h2>
+            {cropWidth && cropHeight && !isGif && (
+              <p className="text-sm text-purple-400 mb-2">
+                Will crop to {cropWidth}×{cropHeight}px
+              </p>
+            )}
             <label
               htmlFor={id || name}
               className="cursor-pointer text-sm font-semibold text-purple-400 hover:text-purple-300"
