@@ -48,16 +48,17 @@ const UsersComponent = ({
               </div>
               <div className="ml-2">
                 <p className="mt-1 text-sm text-gray-500">
-                  Handle: {user.handle}
+                  <strong>Handle:</strong> {user.handle}
                 </p>
                 <p className="mt-1  text-sm text-gray-500">
-                  Allowed scopes: {user.allowedScopes.join(", ")}
+                  <strong>Allowed scopes:</strong>{" "}
+                  {user.allowedScopes.join(", ")}
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
-                  Created on: {user.createdAt}
+                  <strong>Created on:</strong> {user.createdAt}
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
-                  Updated on: {user.updatedAt}
+                  <strong>Updated on:</strong> {user.updatedAt}
                 </p>
               </div>
             </Link>

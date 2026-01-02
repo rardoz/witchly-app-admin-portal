@@ -1,7 +1,5 @@
-import { FaPlus, FaTrash, FaUsers } from "react-icons/fa6";
-import FormButton from "@/components/form/form-button";
+import { FaPlus, FaUsers } from "react-icons/fa6";
 import Navbar from "@/components/navbar";
-import DeleteUserForm from "@/components/profile/form/delete";
 
 const TYPE_TO_COMPONENTS = {
   "users-all": {
