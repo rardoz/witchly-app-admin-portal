@@ -8,7 +8,8 @@ const Navbar: React.FC<
       string,
       {
         title: React.ReactNode;
-        href: { url: string; label: React.ReactNode };
+        href?: { url: string; label: React.ReactNode };
+        variant?: string;
       }
     >;
   }>
@@ -17,9 +18,20 @@ const Navbar: React.FC<
     <nav className="flex items-center justify-between border-b border-foreground/10">
       <PageTitle>{componentMap[type].title}</PageTitle>
       <div className="-mt-5 flex items-center gap-4">
-        <LinkButton href={componentMap[type].href.url}>
-          {componentMap[type].href.label}
-        </LinkButton>
+        {componentMap[type].href && (
+          <LinkButton
+            variant={
+              componentMap[type].variant as
+                | "primary"
+                | "success"
+                | "secondary"
+                | undefined
+            }
+            href={componentMap[type].href.url}
+          >
+            {componentMap[type].href.label}
+          </LinkButton>
+        )}
         {children}
       </div>
     </nav>

@@ -22,9 +22,8 @@ export type GetTarotDecksResponse =
   | GetTarotDecksSuccessResponse
   | GetTarotDecksErrorResponse;
 export interface GetTarotDecksInput {
-  handle?: string;
-  email?: string;
-  name?: string;
+  locale?: string;
+  status?: string;
   limit?: number;
   offset?: number;
 }

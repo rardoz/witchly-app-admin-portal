@@ -9,6 +9,7 @@ const TYPE_TO_COMPONENTS = {
         <TbPlayCard /> All Tarot Decks
       </>
     ),
+    variant: "success",
     href: {
       url: "/tarot/decks/create",
       label: (
@@ -48,12 +49,38 @@ const TYPE_TO_COMPONENTS = {
       ),
     },
   },
+  "tarot-cards-all": {
+    title: (
+      <>
+        <TbPlayCard /> All Tarot Cards
+      </>
+    ),
+  },
+  "tarot-card-create": {
+    title: (
+      <>
+        <FaPlus /> Create Tarot Card
+      </>
+    ),
+  },
+  "tarot-cards-edit": {
+    title: (
+      <>
+        <TbPlayCard /> Edit Tarot Card
+      </>
+    ),
+  },
 };
 
 const TarotDecksNav: React.FC<
   React.PropsWithChildren<{
-    type?: "tarot-decks-all" | "tarot-decks-create" | "tarot-decks-edit";
-    id?: string;
+    type?:
+      | "tarot-decks-all"
+      | "tarot-decks-create"
+      | "tarot-decks-edit"
+      | "tarot-cards-all"
+      | "tarot-card-create"
+      | "tarot-cards-edit";
   }>
 > = ({ type = "tarot-decks-all", children }) => {
   return (

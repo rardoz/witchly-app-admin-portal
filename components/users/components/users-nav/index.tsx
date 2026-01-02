@@ -8,8 +8,10 @@ const TYPE_TO_COMPONENTS = {
         <FaUsers /> All Users
       </>
     ),
+    variant: "success",
     href: {
       url: "/users/create",
+
       label: (
         <>
           <FaPlus /> Create User
