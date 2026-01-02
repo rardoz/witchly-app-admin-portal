@@ -1,4 +1,6 @@
+import { FaEye } from "react-icons/fa6";
 import readTarotDeckAction from "@/actions/tarot/deck/read";
+import LinkButton from "@/components/link-button";
 import TarotNav from "@/components/tarot/components/nav";
 import TarotDeckForm from "@/components/tarot/decks/components/form";
 import DeleteTarotDeckForm from "@/components/tarot/decks/components/form/delete";
@@ -22,6 +24,9 @@ export default async function TarotDecksEdit({
   return (
     <div>
       <TarotNav type="tarot-decks-edit">
+        <LinkButton variant="success" href="/tarot/decks/create">
+          <FaEye /> Deck Cards
+        </LinkButton>
         <DeleteTarotDeckForm id={awaitedParams.id} />
       </TarotNav>
 

@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import deleteTarotDeckAction, {
@@ -16,15 +16,30 @@ const DeleteTarotDeckForm: React.FC<{ id: string }> = ({ id }) => {
     FormData
   >(deleteTarotDeckAction, null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     if (deleteState?.message) {
       setIsModalOpen(true);
     }
   }, [deleteState]);
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (
+      confirm(
+        "Are you sure you want to delete this? This action can not be undone.",
+      )
+    ) {
+      const formData = new FormData(e.currentTarget);
+      startTransition(() => {
+        deleteFormAction(formData);
+      });
+    }
+  };
+
   return (
     <form
-      action={deleteFormAction}
+      onSubmit={handleSubmit}
       className="flex justify-between items-center gap-4"
     >
       <input type="hidden" name="id" value={id || ""} />
