@@ -44,6 +44,8 @@ const FormBackdrop: React.FC<{
         id="backdrop-asset"
         name="asset"
         open={open}
+        cropWidth={2200}
+        cropHeight={400}
         onClose={(assetId?: string, publicURL?: string) => {
           setOpen(false);
           if (assetId && publicURL) {

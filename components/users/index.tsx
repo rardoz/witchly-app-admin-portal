@@ -36,7 +36,7 @@ const UsersComponent = ({
                     src={
                       user.profileAsset?.publicUrl?.includes(".gif")
                         ? user.profileAsset?.publicUrl
-                        : `${user.profileAsset?.publicUrl}?w=200&h=200&q=100` ||
+                        : `${user.profileAsset?.publicUrl}?w=300&h=300&q=100` ||
                           ""
                     }
                     alt="click to upload avatar"

@@ -34,7 +34,7 @@ const FormAvatar: React.FC<{
               src={
                 asset?.publicUrl?.includes(".gif")
                   ? asset?.publicUrl
-                  : `${asset?.publicUrl}?w=200&h=200&q=100` || ""
+                  : `${asset?.publicUrl}?w=300&h=300&q=100` || ""
               }
               alt="click to upload avatar"
               fill
@@ -48,6 +48,8 @@ const FormAvatar: React.FC<{
         id="avatar-asset"
         name="asset"
         open={open}
+        cropWidth={300}
+        cropHeight={300}
         onClose={(assetId?: string, publicURL?: string) => {
           setOpen(false);
           if (assetId && publicURL) {
