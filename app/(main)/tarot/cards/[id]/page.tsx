@@ -6,35 +6,36 @@ import TarotDeckForm from "@/components/tarot/decks/components/form";
 import DeleteTarotDeckForm from "@/components/tarot/decks/components/form/delete";
 import { auth } from "@/lib/auth/auth";
 
-export default async function TarotDecksEdit({
+export default async function TarotCardsEdit({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   await auth();
   const awaitedParams = await params;
-  const readTarotDeck = await readTarotDeckAction({
-    id: awaitedParams.id || "",
-  }).catch((error) => {
-    console.error("Failed to read tarot deck:", error);
-    return { errors: [error] };
-  });
+  //   const readTarotDeck = await readTarotDeckAction({
+  //     id: awaitedParams.id || "",
+  //   }).catch((error) => {
+  //     console.error("Failed to read tarot deck:", error);
+  //     return { errors: [error] };
+  //   });
 
-  const hasErrors = readTarotDeck.errors || !readTarotDeck.data?.tarotDeck;
+  //const hasErrors = readTarotDeck.errors || !readTarotDeck.data?.tarotDeck;
   return (
     <div>
-      <TarotNav type="tarot-decks-edit">
-        <LinkButton variant="success" href={`/tarot/cards/${awaitedParams.id}`}>
-          <FaEye /> Tarot Cards
+      {/* <TarotNav type="tarot-decks-cards">
+        <LinkButton variant="success" href="/tarot/decks/[id]/cards">
+          <FaEye /> Deck Cards
         </LinkButton>
         <DeleteTarotDeckForm id={awaitedParams.id} />
-      </TarotNav>
+      </TarotNav> */}
 
       <div className="mt-6">
-        {hasErrors && <p>Failed to load tarot deck</p>}
+        todo
+        {/* {hasErrors && <p>Failed to load tarot deck</p>}
         {!hasErrors && (
           <TarotDeckForm tarotDeckData={readTarotDeck.data?.tarotDeck} />
-        )}
+        )} */}
       </div>
     </div>
   );

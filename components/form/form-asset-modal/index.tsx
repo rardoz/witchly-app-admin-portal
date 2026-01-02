@@ -292,7 +292,7 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
                   </p>
                 )}
                 {filePreview && (
-                  <div className="max-w-[600px] max-h-[600px] w-full h-full">
+                  <div className="flex items-center justify-center">
                     {!isGif ? (
                       <ReactCrop
                         crop={crop}
@@ -310,7 +310,8 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
                           src={filePreview}
                           alt="file asset preview"
                           onLoad={onImageLoad}
-                          className="max-w-full max-h-full w-auto h-auto object-contain"
+                          style={{ maxWidth: "600px", maxHeight: "600px" }}
+                          className="w-auto h-auto object-contain"
                         />
                       </ReactCrop>
                     ) : (
@@ -319,7 +320,8 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
                         ref={imageRef}
                         src={filePreview}
                         alt="file asset preview"
-                        className="max-w-full max-h-full w-auto h-auto object-contain"
+                        style={{ maxWidth: "600px", maxHeight: "600px" }}
+                        className="w-auto h-auto object-contain"
                       />
                     )}
                   </div>
