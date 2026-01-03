@@ -3,17 +3,21 @@ import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
-import deleteUserAction, { type DeleteUserState } from "@/actions/user/delete";
+import deleteTarotCardAction, {
+  type DeleteTarotCardState,
+} from "@/actions/tarot/card/delete";
 import FormButton from "@/components/form/form-button";
 import Modal from "@/components/modal";
 
-const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
+const DeleteTarotCardForm: React.FC<{ id: string; tarotDeckId: string }> = ({
+  id,
+  tarotDeckId,
+}) => {
   const router = useRouter();
   const [deleteState, deleteFormAction] = useActionState<
-    DeleteUserState | null,
+    DeleteTarotCardState | null,
     FormData
-  >(deleteUserAction, null);
-
+  >(deleteTarotCardAction, null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -26,7 +30,7 @@ const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
     e.preventDefault();
     if (
       confirm(
-        "Are you sure you want to delete this user? This action can not be undone.",
+        "Are you sure you want to delete this? This action can not be undone.",
       )
     ) {
       const formData = new FormData(e.currentTarget);
@@ -42,15 +46,16 @@ const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
       className="flex justify-between items-center gap-4"
     >
       <input type="hidden" name="id" value={id || ""} />
+      <input type="hidden" name="tarotDeckId" value={tarotDeckId || ""} />
       <FormButton className="bg-red-800 hover:bg-orange-800">
-        <FaTrash /> Delete User
+        <FaTrash /> Delete Tarot Card
       </FormButton>
       <Modal
         open={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
           if (deleteState?.success) {
-            router.replace("/users");
+            router.replace(`/tarot/cards/${tarotDeckId}`);
           }
         }}
       >
@@ -78,4 +83,4 @@ const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
   );
 };
 
-export default DeleteUserForm;
+export default DeleteTarotCardForm;

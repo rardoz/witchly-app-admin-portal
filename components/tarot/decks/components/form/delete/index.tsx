@@ -3,17 +3,18 @@ import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
-import deleteUserAction, { type DeleteUserState } from "@/actions/user/delete";
+import deleteTarotDeckAction, {
+  type DeleteTarotDeckState,
+} from "@/actions/tarot/deck/delete";
 import FormButton from "@/components/form/form-button";
 import Modal from "@/components/modal";
 
-const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
+const DeleteTarotDeckForm: React.FC<{ id: string }> = ({ id }) => {
   const router = useRouter();
   const [deleteState, deleteFormAction] = useActionState<
-    DeleteUserState | null,
+    DeleteTarotDeckState | null,
     FormData
-  >(deleteUserAction, null);
-
+  >(deleteTarotDeckAction, null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
     e.preventDefault();
     if (
       confirm(
-        "Are you sure you want to delete this user? This action can not be undone.",
+        "Are you sure you want to delete this? This action can not be undone.",
       )
     ) {
       const formData = new FormData(e.currentTarget);
@@ -43,14 +44,14 @@ const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
     >
       <input type="hidden" name="id" value={id || ""} />
       <FormButton className="bg-red-800 hover:bg-orange-800">
-        <FaTrash /> Delete User
+        <FaTrash /> Delete Tarot Deck
       </FormButton>
       <Modal
         open={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
           if (deleteState?.success) {
-            router.replace("/users");
+            router.replace("/tarot/decks");
           }
         }}
       >
@@ -78,4 +79,4 @@ const DeleteUserForm: React.FC<{ id: string }> = ({ id }) => {
   );
 };
 
-export default DeleteUserForm;
+export default DeleteTarotDeckForm;

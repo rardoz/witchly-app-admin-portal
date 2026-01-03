@@ -27,8 +27,7 @@ export default async (
     // Filter out 'id' and Next.js action metadata keys
     const input: Record<string, unknown> = Object.fromEntries(
       Array.from(formData.entries()).filter(
-        ([key, value]) =>
-          key !== "id" && !key.startsWith("$ACTION_") && value !== "",
+        ([key]) => key !== "id" && !key.startsWith("$ACTION_"),
       ),
     );
 
