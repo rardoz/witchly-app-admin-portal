@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   useActionState,
@@ -8,7 +10,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { FaRegSave } from "react-icons/fa";
+import { FaEye, FaRegSave } from "react-icons/fa";
 import createTarotDeckAction, {
   type CreateTarotDeckState,
 } from "@/actions/tarot/deck/create";
@@ -23,8 +25,15 @@ import FormLocale from "@/components/form/form-locale";
 import FormSelect from "@/components/form/form-select";
 import FormStatus from "@/components/form/form-status";
 import FormTextarea from "@/components/form/form-textarea";
+import LinkButton from "@/components/link-button";
 import FormCardAsset from "@/components/tarot/components/form-card-asset";
+import {
+  CARD_PREVIEW_HEIGHT,
+  CARD_PREVIEW_WIDTH,
+} from "@/components/tarot/constants";
+import type { TarotCardsData } from "@/types/tarot-cards";
 import type { TarotDeck } from "@/types/tarot-deck";
+import CardsPrevew from "../cards-preview";
 
 const mapTarotDeckDataToState = (tarotDeckData?: TarotDeck) => ({
   name: tarotDeckData?.name || "",
@@ -43,7 +52,13 @@ const mapTarotDeckDataToState = (tarotDeckData?: TarotDeck) => ({
   primaryAssetPublicUrl: tarotDeckData?.primaryAsset?.publicUrl || "",
 });
 
-const TarotDeckForm = ({ tarotDeckData }: { tarotDeckData?: TarotDeck }) => {
+const TarotDeckForm = ({
+  tarotDeckData,
+  tarotCardsData,
+}: {
+  tarotDeckData?: TarotDeck;
+  tarotCardsData?: TarotCardsData;
+}) => {
   const [state, formAction] = useActionState<
     UpdateTarotDeckState | null,
     FormData
@@ -154,6 +169,17 @@ const TarotDeckForm = ({ tarotDeckData }: { tarotDeckData?: TarotDeck }) => {
       />
     );
   }, [formValues.primaryColor]);
+
+  const formCardPreview = useMemo(() => {
+    return (
+      <CardsPrevew
+        tarotDeckId={tarotDeckData?._id}
+        tarotCardsData={tarotCardsData}
+        primaryColor={formValues.primaryColor}
+      />
+    );
+  }, [tarotDeckData?._id, tarotCardsData, formValues.primaryColor]);
+
   return (
     <form action={tarotDeckData ? formAction : createFormAction}>
       {(state?.message || createState?.message) && (
@@ -172,6 +198,7 @@ const TarotDeckForm = ({ tarotDeckData }: { tarotDeckData?: TarotDeck }) => {
       <div className="overflow-auto flex gap-8">
         {formCardAsset}
         {formCardBg}
+        {formCardPreview}
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 mt-4">
         <div>

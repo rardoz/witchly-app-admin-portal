@@ -1,4 +1,5 @@
 import { FaEye } from "react-icons/fa6";
+import readTarotCardsAction from "@/actions/tarot/cards/read";
 import readTarotDeckAction from "@/actions/tarot/deck/read";
 import LinkButton from "@/components/link-button";
 import TarotNav from "@/components/tarot/components/nav";
@@ -14,10 +15,18 @@ export default async function TarotDecksEdit({
   await auth();
   const awaitedParams = await params;
   const readTarotDeck = await readTarotDeckAction({
-    id: awaitedParams.id || "",
+    id: awaitedParams.id,
   }).catch((error) => {
     console.error("Failed to read tarot deck:", error);
     return { errors: [error] };
+  });
+
+  const readTarotCards = await readTarotCardsAction({
+    tarotDeckId: awaitedParams.id,
+    status: "active",
+  }).catch((error) => {
+    console.error("Failed to read tarot cards:", error);
+    return { errors: [error], data: { tarotCards: null } };
   });
 
   const hasErrors = readTarotDeck.errors || !readTarotDeck.data?.tarotDeck;
@@ -33,7 +42,10 @@ export default async function TarotDecksEdit({
       <div className="mt-6">
         {hasErrors && <p>Failed to load tarot deck</p>}
         {!hasErrors && (
-          <TarotDeckForm tarotDeckData={readTarotDeck.data?.tarotDeck} />
+          <TarotDeckForm
+            tarotDeckData={readTarotDeck.data?.tarotDeck}
+            tarotCardsData={readTarotCards?.data?.tarotCards || undefined}
+          />
         )}
       </div>
     </div>

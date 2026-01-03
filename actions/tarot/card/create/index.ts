@@ -72,6 +72,7 @@ export default async (
     }
 
     revalidatePath(`/tarot/cards/${input.tarotDeck}`);
+    revalidatePath(`/tarot/decks/${input.tarotDeck}`);
     return {
       success: true,
       message: "Tarot card created successfully!",

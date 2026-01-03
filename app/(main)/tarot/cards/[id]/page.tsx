@@ -1,5 +1,4 @@
 import { FaEye, FaPlus } from "react-icons/fa6";
-import { TbPlayCard } from "react-icons/tb";
 import readTarotCardsAction from "@/actions/tarot/cards/read";
 import LinkButton from "@/components/link-button";
 import Pagination from "@/components/pagination";

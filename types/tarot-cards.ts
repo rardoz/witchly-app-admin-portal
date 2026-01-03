@@ -4,6 +4,8 @@ import type { TarotCard } from "./tarot-card";
 export interface TarotCardsData {
   records: TarotCard[];
   totalCount: number;
+  limit: number;
+  offset: number;
 }
 
 export interface GetTarotCardsSuccessResponse {
