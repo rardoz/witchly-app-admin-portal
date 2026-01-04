@@ -27,7 +27,10 @@ const FormLocale = ({
         <option value="en-US">English (US)</option>
         <option value="en-CA">English (CA)</option>
         <option value="en-GB">English (UK)</option>
+        <option value="fr">French (Default)</option>
         <option value="fr-FR">French (FR)</option>
+        <option value="fr-CA">French (CA)</option>
+        <option value="es">Spanish (Default)</option>
         <option value="es-ES">Spanish (ES)</option>
       </FormSelect>
     </>

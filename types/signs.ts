@@ -22,6 +22,7 @@ export type GetSignsResponse = GetSignsSuccessResponse | GetSignsErrorResponse;
 export interface GetSignsInput {
   locale?: string;
   sign?: string;
+  status?: string;
   limit?: number;
   offset?: number;
 }

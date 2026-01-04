@@ -11,16 +11,18 @@ export default async (input: GetSignsInput): Promise<GetSignsResponse> => {
   // Call API to send login code
   const cacheKey = getCacheKey(JSON.stringify(input));
   const session = await auth();
+  console.log(input);
   const cachedFetch = unstable_cache(
     async () => {
       const response = await gqlRequestWithAuth(
         session,
         `
-        query GetHoroscopeSigns($locale: String, $sign: String, $limit: Int, $offset: Int) {
-          getHoroscopeSigns(locale: $locale, sign: $sign, limit: $limit, offset: $offset) {
+        query GetHoroscopeSigns($locale: String, $sign: String, $status: String, $limit: Int, $offset: Int) {
+          getHoroscopeSigns(locale: $locale, sign: $sign, status: $status, limit: $limit, offset: $offset) {
             records {
                 _id
                 sign
+                signLocal
                 locale
                 description
                 signDateStart
@@ -29,6 +31,7 @@ export default async (input: GetSignsInput): Promise<GetSignsResponse> => {
                 title
                 createdAt
                 updatedAt
+                status
               }
               totalCount 
             }

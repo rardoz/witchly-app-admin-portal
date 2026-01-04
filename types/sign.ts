@@ -13,20 +13,20 @@ export interface Sign {
   title: string;
   createdAt: string;
   updatedAt: string;
+  signLocal: string;
+  status: string;
 }
 
 export interface GetSignSuccessResponse {
   data: {
-    sign: Sign;
+    getHoroscopeSign: Sign;
   };
   errors?: never;
 }
 
 export interface GetSignErrorResponse {
   errors: GraphQLError[];
-  data: {
-    sign: null;
-  };
+  data: null;
 }
 
 export type GetSignResponse = GetSignSuccessResponse | GetSignErrorResponse;

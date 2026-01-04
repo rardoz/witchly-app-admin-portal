@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import type { GetSignsResponse } from "@/types/signs";
 import Card from "../card";
@@ -22,11 +21,16 @@ const SignsComponent = ({
       <div className="grid grid-cols-2 gap-10">
         {signs?.records?.map((sign) => (
           <div key={sign._id} className="">
-            <Link href={`/signs/${sign._id}`} className="cursor-pointer">
+            <Link
+              href={`/signs/${sign._id}`}
+              className="cursor-pointer flex h-full"
+            >
               <Card>
                 {
                   <CardImage
-                    className="h-60 mh-60"
+                    fill={false}
+                    width={400}
+                    height={200}
                     src={
                       sign.asset?.publicUrl &&
                       (sign.asset?.publicUrl?.includes(".gif")
@@ -44,8 +48,14 @@ const SignsComponent = ({
                   <p className="mt-1 text-sm text-gray-500">
                     <strong>Sign:</strong> {sign.sign}
                   </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    <strong>Translation:</strong> {sign.signLocal}
+                  </p>
                   <p className="mt-1  text-sm text-gray-500">
                     <strong>Locale:</strong> {sign.locale}
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    <strong>Status:</strong> {sign.status}
                   </p>
                   <p className="mt-1 text-sm text-gray-500">
                     <strong>Created on:</strong> {sign.createdAt}

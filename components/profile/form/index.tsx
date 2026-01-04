@@ -18,6 +18,7 @@ import FormColorPicker from "@/components/form/form-color-picker";
 import FormInput from "@/components/form/form-input";
 import FormLabel from "@/components/form/form-label";
 import FormSelect from "@/components/form/form-select";
+import FormSign from "@/components/form/form-sign";
 import FormTextarea from "@/components/form/form-textarea";
 import type { User } from "@/types/user";
 
@@ -224,32 +225,11 @@ const ProfileForm = ({ userData }: { userData?: User }) => {
           />
         </div>
         <div>
-          <FormLabel htmlFor="sign">Sign</FormLabel>
-          <FormSelect
-            name="sign"
-            value={formValues.sign || ""}
-            onChange={handleChange}
-          >
-            <option value="">Select your sign</option>
-            <option value="capricorn">
-              Capricorn (December 22 - January 19)
-            </option>
-            <option value="aquarius">
-              Aquarius (January 20 - February 18)
-            </option>
-            <option value="pisces">Pisces (February 19 - March 20)</option>
-            <option value="aries">Aries (March 21 - April 19)</option>
-            <option value="taurus">Taurus (April 20 - May 20)</option>
-            <option value="gemini">Gemini (May 21 - June 20)</option>
-            <option value="cancer">Cancer (June 21 - July 22)</option>
-            <option value="leo">Leo (July 23 - August 22)</option>
-            <option value="virgo">Virgo (August 23 - September 22)</option>
-            <option value="libra">Libra (September 23 - October 22)</option>
-            <option value="scorpio">Scorpio (October 23 - November 21)</option>
-            <option value="sagittarius">
-              Sagittarius (November 22 - December 21)
-            </option>
-          </FormSelect>
+          <FormSign
+            value={formValues.sign}
+            handleChange={handleChange}
+            showNull
+          />
         </div>
         <div>
           <FormLabel htmlFor="sex">Sex</FormLabel>

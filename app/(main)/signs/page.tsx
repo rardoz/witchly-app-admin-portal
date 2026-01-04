@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth/auth";
 interface SignsSearchParams {
   locale?: string;
   sign?: string;
+  status?: string;
 }
 
 interface PaginationParams {
@@ -28,6 +29,8 @@ export default async function Signs({
   if (awaitedSearchParams.locale) filters.locale = awaitedSearchParams.locale;
 
   if (awaitedSearchParams.sign) filters.sign = awaitedSearchParams.sign;
+
+  if (awaitedSearchParams.status) filters.status = awaitedSearchParams.status;
 
   const readSigns = await readSignsAction({ limit, offset, ...filters }).catch(
     (error) => {
