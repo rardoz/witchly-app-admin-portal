@@ -1,4 +1,4 @@
-import { FaPenToSquare, FaUsers } from "react-icons/fa6";
+import { FaPenToSquare, FaSignsPost, FaUsers } from "react-icons/fa6";
 import { TbPlayCard } from "react-icons/tb";
 import readUserAction from "@/actions/user/read";
 import Link from "@/components/link";
@@ -15,6 +15,11 @@ const routes = [
     name: "Tarot",
     href: "/tarot/decks",
     icon: <TbPlayCard className="inline-block mr-2" />,
+  },
+  {
+    name: "Signs",
+    href: "/signs",
+    icon: <FaSignsPost className="inline-block mr-2" />,
   },
 ];
 
