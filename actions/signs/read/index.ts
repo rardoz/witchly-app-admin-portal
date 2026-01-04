@@ -11,7 +11,7 @@ export default async (input: GetSignsInput): Promise<GetSignsResponse> => {
   // Call API to send login code
   const cacheKey = getCacheKey(JSON.stringify(input));
   const session = await auth();
-  console.log(input);
+
   const cachedFetch = unstable_cache(
     async () => {
       const response = await gqlRequestWithAuth(
