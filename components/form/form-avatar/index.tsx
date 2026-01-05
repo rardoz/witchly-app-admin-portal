@@ -9,8 +9,9 @@ const FormAvatar: React.FC<{
   asset?: Asset | null;
   className?: string;
   primaryColor?: string;
+  noCrop?: boolean;
   onUpdateAsset: (assetId: string, publicUrl: string) => void;
-}> = ({ asset, className, onUpdateAsset, primaryColor }) => {
+}> = ({ asset, className, onUpdateAsset, primaryColor, noCrop }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className={className}>
@@ -26,8 +27,8 @@ const FormAvatar: React.FC<{
           className="w-28 h-28 mr-2 bg-purple-900 relative rounded-full overflow-hidden border-2 border-white shadow z-1"
           style={primaryColor ? { borderColor: primaryColor } : {}}
         >
-          <small className="absolute top-1/3 left-0 z-0">
-            Click to upload avatar
+          <small className="absolute top-1/3 left-0 text-center w-full z-0">
+            Click to upload
           </small>
           {asset?.publicUrl && (
             <Image
@@ -36,7 +37,7 @@ const FormAvatar: React.FC<{
                   ? asset?.publicUrl
                   : `${asset?.publicUrl}?w=300&h=300&q=100` || ""
               }
-              alt="click to upload avatar"
+              alt="click to upload"
               fill
               unoptimized
               className="absolute inset-0 h-full w-full object-cover z-1"
@@ -48,8 +49,8 @@ const FormAvatar: React.FC<{
         id="avatar-asset"
         name="asset"
         open={open}
-        cropWidth={300}
-        cropHeight={300}
+        cropWidth={noCrop ? undefined : 300}
+        cropHeight={noCrop ? undefined : 300}
         onClose={(assetId?: string, publicURL?: string) => {
           setOpen(false);
           if (assetId && publicURL) {

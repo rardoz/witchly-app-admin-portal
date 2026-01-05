@@ -10,10 +10,12 @@ const CardImage: React.FC<{
   fill?: boolean;
   width?: number;
   height?: number;
+  primaryColor?: string;
 }> = ({
   src,
   alt,
   unoptimized,
+  primaryColor,
   imageContainerClassName,
   placeHolderClassName = "h-28 min-h-28",
   imageClassName = "w-full",
@@ -26,13 +28,14 @@ const CardImage: React.FC<{
       {src && (
         <div
           className={`relative rounded-lg overflow-hidden border-2 border-gray-600 ${imageContainerClassName}`}
+          style={{ borderColor: primaryColor }}
         >
           <Image
             src={src}
             alt={alt}
             fill={fill}
-            width={width}
-            height={height}
+            width={!fill ? width : undefined}
+            height={!fill ? height : undefined}
             unoptimized={unoptimized}
             className={`${imageClassName}`}
           />

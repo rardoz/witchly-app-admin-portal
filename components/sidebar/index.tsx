@@ -1,3 +1,4 @@
+import { BsMoon } from "react-icons/bs";
 import { FaPenToSquare, FaSignsPost, FaUsers } from "react-icons/fa6";
 import { TbPlayCard, TbStars } from "react-icons/tb";
 import readUserAction from "@/actions/user/read";
@@ -25,6 +26,11 @@ const routes = [
     name: "Horoscopes",
     href: "/horoscopes",
     icon: <TbStars className="inline-block mr-2" />,
+  },
+  {
+    name: "Moon Phases",
+    href: "/moon-phases",
+    icon: <BsMoon className="inline-block mr-2" />,
   },
 ];
 
