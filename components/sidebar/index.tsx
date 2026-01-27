@@ -1,5 +1,9 @@
 import { BsMoon } from "react-icons/bs";
 import { FaPenToSquare, FaSignsPost, FaUsers } from "react-icons/fa6";
+import { GiEightBall, GiHut, GiSpellBook } from "react-icons/gi";
+import { IoChatboxEllipses, IoStorefrontSharp } from "react-icons/io5";
+import { LuPartyPopper } from "react-icons/lu";
+import { MdOutlineCategory } from "react-icons/md";
 import { TbPlayCard, TbStars } from "react-icons/tb";
 import readUserAction from "@/actions/user/read";
 import Link from "@/components/link";
@@ -31,6 +35,41 @@ const routes = [
     name: "Moon Phases",
     href: "/moon-phases",
     icon: <BsMoon className="inline-block mr-2" />,
+  },
+  {
+    name: "Magic Eight Ball",
+    href: "/magic-eight-ball",
+    icon: <GiEightBall className="inline-block mr-2" />,
+  },
+  {
+    name: "Spellbooks",
+    href: "/spellbooks",
+    icon: <GiSpellBook className="inline-block mr-2" />,
+  },
+  {
+    name: "Covens",
+    href: "/covens",
+    icon: <GiHut className="inline-block mr-2" />,
+  },
+  {
+    name: "Events",
+    href: "/events",
+    icon: <LuPartyPopper className="inline-block mr-2" />,
+  },
+  {
+    name: "Market",
+    href: "/market",
+    icon: <IoStorefrontSharp className="inline-block mr-2" />,
+  },
+  {
+    name: "Categories",
+    href: "/categories",
+    icon: <MdOutlineCategory className="inline-block mr-2" />,
+  },
+  {
+    name: "Chat",
+    href: "/chat",
+    icon: <IoChatboxEllipses className="inline-block mr-2" />,
   },
 ];
 
