@@ -1,6 +1,7 @@
-import type { Color, ColorGenInput } from "@rc-component/color-picker";
-import ColorPicker from "@rc-component/color-picker";
+import type { ColorGenInput } from "@rc-component/color-picker";
+import ColorPicker, { Color } from "@rc-component/color-picker";
 import Trigger from "@rc-component/trigger";
+import { useEffect, useRef, useState } from "react";
 import FormInput from "../form-input";
 import "@rc-component/color-picker/assets/index.css";
 import type { BuildInPlacements } from "@rc-component/trigger";
@@ -92,12 +93,10 @@ export const placements: BuildInPlacements = {
 const rgbToHex = (value?: string): string => {
   if (!value) return "";
 
-  // If already a hex value, return it cleaned
   if (value.startsWith("#")) {
-    return value.slice(0, 9); // Limit to #RRGGBBAA format
+    return value.slice(0, 9);
   }
 
-  // Match RGB/RGBA patterns like "rgb(255, 0, 0)" or "rgba(255, 0, 0, 0.5)"
   const rgbMatch = value.match(
     /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/,
   );
@@ -120,30 +119,75 @@ const rgbToHex = (value?: string): string => {
       : `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   }
 
-  // Fallback: try to clean as hex string
   const hexValue = value.replace(/[^0-9a-fA-F#]/g, "").slice(0, 9);
   return hexValue.startsWith("#") ? hexValue : `#${hexValue}`;
 };
+
+const isValidHex = (hex: string) =>
+  /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(hex);
 
 const FormColorPicker: React.FC<{
   value: ColorGenInput;
   onChange: (color: Color) => void;
 }> = ({ value, onChange }) => {
+  const [inputText, setInputText] = useState(() =>
+    rgbToHex(value?.toString() ?? ""),
+  );
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Don't overwrite what the user is actively typing
+    if (document.activeElement !== inputRef.current) {
+      setInputText(rgbToHex(value?.toString() ?? ""));
+    }
+  }, [value]);
+
+  const commit = (text: string) => {
+    const hex = text.startsWith("#") ? text : `#${text}`;
+    if (isValidHex(hex)) {
+      onChange(new Color(hex));
+    } else {
+      // Revert to last confirmed value
+      setInputText(rgbToHex(value?.toString() ?? ""));
+    }
+  };
+
+  const displayColor = isValidHex(inputText)
+    ? inputText
+    : rgbToHex(value?.toString() ?? "");
+
   return (
-    <Trigger
-      action={["click"]}
-      prefixCls="rc-color-picker"
-      popup={<ColorPicker disabledAlpha value={value} onChange={onChange} />}
-      popupPlacement="bottomLeft"
-      builtinPlacements={placements}
-    >
+    <div className="flex items-center gap-1.5">
+      <Trigger
+        action={["click"]}
+        prefixCls="rc-color-picker"
+        popup={<ColorPicker disabledAlpha value={value} onChange={onChange} />}
+        popupPlacement="bottomLeft"
+        builtinPlacements={placements}
+      >
+        <button
+          type="button"
+          className="w-7 h-7 rounded border border-zinc-600 flex-shrink-0 cursor-pointer"
+          style={{ backgroundColor: displayColor || "#18181b" }}
+          aria-label="Open color picker"
+        />
+      </Trigger>
       <FormInput
-        name="primaryColor"
+        ref={inputRef}
+        name=""
         type="text"
         autoComplete="off"
-        defaultValue={rgbToHex(value.toString())}
+        value={inputText}
+        onChange={(e) => setInputText(e.target.value)}
+        onBlur={(e) => commit(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            commit((e.target as HTMLInputElement).value);
+          }
+        }}
       />
-    </Trigger>
+    </div>
   );
 };
 

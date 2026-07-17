@@ -1,11 +1,13 @@
 import classNames from "classnames";
+import { forwardRef } from "react";
 
-const FormInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
-  className,
-  ...props
-}) => {
+const FormInput = forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>(({ className, ...props }, ref) => {
   return (
     <input
+      ref={ref}
       {...props}
       id={props.id || props.name || undefined}
       className={classNames(
@@ -14,6 +16,6 @@ const FormInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
       )}
     />
   );
-};
+});
 
 export default FormInput;

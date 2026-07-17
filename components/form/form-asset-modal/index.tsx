@@ -347,7 +347,7 @@ const FormAssetModal: React.FC<FormAssetModalProps> = ({
               PNG, JPG, GIF up to 10MB
             </p>
             <input
-              id={id}
+              id={id || name}
               type="file"
               name={name}
               accept={accept}
