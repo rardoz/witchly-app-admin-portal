@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { sanitizeMeta } from "@/actions/helpers";
 import gqlRequest from "@/lib/gql";
 
 export interface CreateSpellbookState {
@@ -20,6 +21,10 @@ export default async (
         ([key, value]) => !key.startsWith("$ACTION_") && value !== "",
       ),
     );
+
+    if (input.meta) {
+      input.meta = sanitizeMeta(input.meta as string | string[]);
+    }
 
     const response = await gqlRequest(
       `

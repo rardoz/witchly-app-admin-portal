@@ -22,6 +22,7 @@ import FormColorPicker from "@/components/form/form-color-picker";
 import FormFont from "@/components/form/form-font";
 import FormInput from "@/components/form/form-input";
 import FormLabel from "@/components/form/form-label";
+import FormMeta from "@/components/form/form-meta";
 import FormSelect from "@/components/form/form-select";
 import FormTextarea from "@/components/form/form-textarea";
 import RichTextEditor from "@/components/form/rich-text-editor";
@@ -41,7 +42,7 @@ const mapDataToState = (data?: SpellbookPage) => ({
   primaryAssetPublicUrl: data?.primaryAsset?.publicUrl || "",
   backgroundAsset: data?.backgroundAsset?.id || "",
   backgroundAssetPublicUrl: data?.backgroundAsset?.publicUrl || "",
-  meta: data?.meta?.join(", ") || "",
+  meta: data?.meta || [],
 });
 
 const SpellPageForm = ({
@@ -267,12 +268,14 @@ const SpellPageForm = ({
           </FormSelect>
         </div>
         <div>
-          <FormLabel htmlFor="meta">Metadata (comma separated)</FormLabel>
-          <FormInput
-            name="meta"
-            type="text"
+          <FormMeta
             value={formValues.meta}
-            onChange={handleChange}
+            handleChange={(value) =>
+              setFormValues((prev) => ({
+                ...prev,
+                meta: value,
+              }))
+            }
           />
         </div>
         <div>
