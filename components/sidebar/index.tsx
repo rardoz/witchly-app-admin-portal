@@ -43,7 +43,7 @@ const routes = [
   },
   {
     name: "Spellbooks",
-    href: "/spellbooks",
+    href: "/spell/books",
     icon: <GiSpellBook className="inline-block mr-2" />,
   },
   {
